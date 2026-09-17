@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OJAS ROBO — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#E93E08;
+    --orange-dark:#C22F02;
+    --yellow:#EADA15;
+    --dark:#161513;
+    --dark-2:#0E0D0B;
+    --ink:#F5F2EA;
+    --ink-soft:rgba(245,242,234,0.62);
+    --paper:#161513;
+    --paper-2:#1E1B17;
+    --line: rgba(255,255,255,0.14);
+    --surface:#211D19;
+    --card-dark:#161513;
+    --radius: 14px;
+    --maxw: 1240px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{
+    font-family:'Anton', 'Inter', sans-serif;
+    font-weight:400;
+    letter-spacing:0.2px;
+    margin:0;
+    line-height:1.05;
+  }
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px;}
+  img{max-width:100%;display:block;}
+  ::selection{background:var(--yellow);color:var(--dark);}
+
+  /* ---------- Utility icon buttons ---------- */
+  .icon-btn{
+    width:40px;height:40px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:1.5px solid var(--line);background:var(--surface);
+    position:relative; flex-shrink:0;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .icon-btn:hover{border-color:var(--ink);}
+  .icon-btn svg{width:19px;height:19px;stroke:var(--ink);}
+  .badge{
+    position:absolute; top:-4px; right:-4px;
+    background:var(--orange); color:#fff;
+    font-size:10px; font-weight:700;
+    width:17px;height:17px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--paper);
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar{
+    background:var(--dark-2); color:#fff;
+    font-size:12.5px; letter-spacing:0.3px;
+  }
+  .topbar .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:7px; padding-bottom:7px;
+  }
+  .topbar span.accent{color:var(--yellow);}
+  .navrow{
+    display:flex; align-items:center; gap:28px;
+    padding:16px 32px;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    flex-shrink:0;
+  }
+  .logo-mark{width:44px;height:44px;flex-shrink:0;}
+  .logo-text{display:flex;flex-direction:column;line-height:1;}
+  .logo-text .word{
+    font-family:'Anton',sans-serif; font-size:21px; letter-spacing:0.5px;
+    display:flex; gap:6px;
+  }
+  .logo-text .word .o{color:var(--ink);}
+  .logo-text .word .r{color:var(--orange);}
+  .logo-text .tag{
+    font-size:9px; letter-spacing:0.6px; color:var(--ink-soft);
+    margin-top:3px; font-weight:600; text-transform:uppercase;
+  }
+  nav.primary{
+    display:flex; align-items:center; gap:26px;
+    font-size:14.5px; font-weight:600;
+  }
+  nav.primary a{padding:6px 0; position:relative; color:var(--ink-soft);}
+  nav.primary a:hover, nav.primary a.active{color:var(--ink);}
+  nav.primary a.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:-4px; height:2.5px;
+    background:var(--orange); border-radius:2px;
+  }
+  .search-box{
+    display:flex; align-items:center; gap:8px;
+    background:var(--surface); border:1.5px solid var(--line);
+    border-radius:999px; padding:7px 14px;
+    width:210px; flex-shrink:0;
+    transition: width .18s ease, border-color .18s ease;
+  }
+  .search-box:focus-within{border-color:var(--ink); width:250px;}
+  .search-box svg{width:15px;height:15px;stroke:var(--ink-soft); flex-shrink:0;}
+  .search-box input{
+    border:none; outline:none; font-size:13px; width:100%;
+    background:transparent; color:var(--ink); font-family:inherit;
+  }
+  .header-actions{
+    display:flex; align-items:center; gap:10px; margin-left:auto;
+  }
+  .acct-cluster{display:flex;align-items:center;gap:10px;}
+
+  /* ---------- Hero Slideshow ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    background:var(--dark);
+    min-height:520px;
+  }
+  .slide{
+    position:absolute; inset:0; opacity:0; transition:opacity .7s ease;
+    display:flex; align-items:center;
+  }
+  .slide.active{opacity:1; position:relative;}
+  .slide .bg{
+    position:absolute; inset:0;
+    background-size:cover; background-position:center;
+  }
+  .slide .scrim{
+    position:absolute; inset:0;
+  }
+  .slide .wrap{position:relative; z-index:2; width:100%; padding-top:70px; padding-bottom:70px;}
+  .slide-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--yellow); color:var(--dark);
+    font-size:12px; font-weight:700; letter-spacing:0.3px;
+    padding:6px 14px; border-radius:999px; margin-bottom:22px;
+  }
+  .slide h1{
+    color:#fff; font-size:52px; max-width:560px; margin-bottom:18px;
+  }
+  .slide h1 em{font-style:normal; color:var(--yellow);}
+  .slide p.desc{
+    color:rgba(255,255,255,0.78); font-size:16px; max-width:440px; line-height:1.55;
+    margin-bottom:30px;
+  }
+  .slide-ctas{display:flex; gap:12px;}
+  .btn{
+    padding:13px 26px; border-radius:999px; border:none;
+    font-weight:700; font-size:14px; display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary{background:var(--orange); color:#fff;}
+  .btn-primary:hover{background:var(--orange-dark);}
+  .btn-outline{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.5);}
+  .btn-outline:hover{border-color:#fff;}
+  .btn-dark{background:var(--dark-2); color:#fff; border:1px solid rgba(255,255,255,0.14);}
+  .btn-dark:hover{background:#000;}
+
+  .hero-art{
+    position:absolute; right:60px; top:50%; transform:translateY(-50%);
+    width:340px; height:340px; z-index:2;
+  }
+
+  .slide-dots{
+    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+    display:flex; gap:8px; z-index:5;
+  }
+  .slide-dots button{
+    width:26px; height:4px; border-radius:3px; border:none; background:rgba(255,255,255,0.35);
+    padding:0;
+  }
+  .slide-dots button.active{background:var(--yellow);}
+  .hero-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:5;
+    width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.3);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-arrow:hover{background:rgba(255,255,255,0.22);}
+  .hero-arrow svg{width:18px;height:18px;stroke:#fff;}
+  .hero-arrow.prev{left:24px;}
+  .hero-arrow.next{right:24px;}
+
+  /* ---------- Trust strip ---------- */
+  .trust{
+    background:var(--dark-2); border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .trust .wrap{
+    display:grid; grid-template-columns:repeat(4,1fr);
+    padding:22px 32px;
+  }
+  .trust .item{
+    text-align:center; color:#fff;
+    border-right:1px solid rgba(255,255,255,0.1);
+  }
+  .trust .item:last-child{border-right:none;}
+  .trust .item .num{font-family:'Anton'; font-size:26px; color:var(--yellow);}
+  .trust .item .lbl{font-size:12px; color:rgba(255,255,255,0.65); margin-top:2px;}
+
+  /* ---------- Section shell ---------- */
+  section{padding:76px 0;}
+  .section-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    margin-bottom:36px; gap:20px;
+  }
+  .section-head .eyebrow{
+    color:var(--orange); font-weight:700; font-size:13px; letter-spacing:0.3px; margin-bottom:8px; display:block;
+  }
+  .section-head h2{font-size:34px;}
+  .section-head .desc{color:var(--ink-soft); font-size:14.5px; margin-top:8px; max-width:440px;}
+  .view-all{
+    display:flex; align-items:center; gap:6px;
+    font-weight:700; font-size:14px; border-bottom:2px solid var(--ink); padding-bottom:3px;
+    white-space:nowrap;
+  }
+  .view-all svg{width:15px;height:15px;}
+
+  /* ---------- Shop by category ---------- */
+  .cat-grid{
+    display:grid; grid-template-columns:repeat(5,1fr); gap:18px;
+  }
+  .cat-card{
+    background:var(--surface); border:1.5px solid var(--line); border-radius:var(--radius);
+    padding:26px 18px; text-align:center;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .cat-card:hover{
+    transform:translateY(-5px); border-color:var(--orange);
+    box-shadow:0 14px 28px rgba(0,0,0,0.35);
+  }
+  .cat-icon{
+    width:64px; height:64px; border-radius:50%; margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cat-icon svg{width:28px;height:28px;}
+  .cat-card h4{font-family:'Inter'; font-weight:700; font-size:15px; margin-bottom:5px;}
+  .cat-card p{font-size:12.5px; color:var(--ink-soft);}
+  .cat-card .count{
+    display:inline-block; margin-top:10px; font-size:11px; font-weight:700;
+    background:var(--paper-2); padding:3px 10px; border-radius:999px; color:var(--ink-soft);
+  }
+
+  /* ---------- Retailer partners ---------- */
+  .retailers{background:var(--paper-2);}
+  .retailer-grid{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:16px;
+  }
+  .retailer-card{
+    background:var(--surface); border:1.5px solid var(--line); border-radius:12px;
+    height:90px; display:flex; align-items:center; justify-content:center;
+    font-family:'Anton'; font-size:16px; color:var(--ink-soft);
+    letter-spacing:0.3px; transition:border-color .15s ease, color .15s ease;
+  }
+  .retailer-card:hover{border-color:var(--orange); color:var(--ink);}
+  .retailer-note{
+    display:flex; align-items:center; gap:10px; margin-top:24px;
+    font-size:13px; color:var(--ink-soft);
+  }
+  .retailer-note svg{width:17px;height:17px; stroke:var(--orange); flex-shrink:0;}
+
+  /* ---------- Bestsellers ---------- */
+  .bestsellers{background:var(--dark-2); color:#fff;}
+  .bestsellers .section-head h2{color:#fff;}
+  .bestsellers .section-head .desc{color:rgba(255,255,255,0.6);}
+  .bestsellers .view-all{border-bottom-color:#fff; color:#fff;}
+  .bs-scroller{
+    display:grid; grid-auto-flow:column; grid-auto-columns:220px;
+    gap:16px; overflow-x:auto; padding-bottom:10px; margin:0 -32px; padding-left:32px; padding-right:32px;
+    scroll-snap-type:x proximity;
+  }
+  .bs-scroller::-webkit-scrollbar{height:6px;}
+  .bs-scroller::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.2); border-radius:3px;}
+  .bs-card{
+    background:#1F1D1A; border:1px solid rgba(255,255,255,0.08); border-radius:var(--radius);
+    padding:14px; position:relative; scroll-snap-align:start;
+  }
+  .rank-tag{
+    position:absolute; top:14px; left:14px; z-index:2;
+    background:var(--yellow); color:var(--dark);
+    font-family:'Anton'; font-size:12px; width:26px; height:26px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .bs-thumb{
+    width:100%; aspect-ratio:1/1; border-radius:10px; margin-bottom:12px;
+    display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+  }
+  .bs-wish{
+    position:absolute; top:10px; right:10px; width:28px;height:28px; border-radius:50%;
+    background:rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; z-index:2;
+  }
+  .bs-wish svg{width:14px;height:14px; stroke:var(--dark);}
+  .bs-card h4{font-family:'Inter'; font-weight:700; font-size:13.5px; margin-bottom:4px; color:#fff;}
+  .bs-meta{display:flex; align-items:center; gap:5px; font-size:11.5px; color:rgba(255,255,255,0.55); margin-bottom:10px;}
+  .bs-meta svg{width:12px;height:12px; fill:var(--yellow); stroke:none;}
+  .bs-price-row{display:flex; align-items:center; justify-content:space-between;}
+  .bs-price{font-family:'Anton'; font-size:16px; color:var(--yellow);}
+  .bs-add{
+    width:32px;height:32px; border-radius:50%; background:var(--orange); border:none;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .bs-add svg{width:15px;height:15px; stroke:#fff;}
+
+  /* ---------- Reviews ---------- */
+  .review-top{display:flex; align-items:center; gap:26px; margin-bottom:40px; flex-wrap:wrap;}
+  .rating-big{font-family:'Anton'; font-size:56px;}
+  .stars-row svg{width:15px;height:15px; fill:var(--yellow); stroke:none;}
+  .review-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:20px;
+  }
+  .review-card{
+    background:var(--surface); border:1.5px solid var(--line); border-radius:var(--radius);
+    padding:26px;
+  }
+  .review-card .stars-row{margin-bottom:14px; display:flex; gap:2px;}
+  .review-card p.quote{font-size:14.5px; line-height:1.6; color:var(--ink); margin-bottom:20px;}
+  .reviewer{display:flex; align-items:center; gap:10px;}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Anton'; font-size:14px; color:#fff;
+  }
+  .reviewer .name{font-weight:700; font-size:13.5px;}
+  .reviewer .prod{font-size:11.5px; color:var(--ink-soft);}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--dark-2); color:rgba(255,255,255,0.7); padding:56px 0 24px;}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:30px; padding-bottom:36px; border-bottom:1px solid rgba(255,255,255,0.1);}
+  footer h5{font-size:13px; color:#fff; margin-bottom:16px; font-weight:700; font-family:'Inter';}
+  footer ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; font-size:13px;}
+  .foot-bottom{display:flex; justify-content:space-between; padding-top:20px; font-size:12.5px;}
+
+  @media (max-width:1024px){
+    nav.primary, .search-box{display:none;}
+    .cat-grid{grid-template-columns:repeat(3,1fr);}
+    .retailer-grid{grid-template-columns:repeat(3,1fr);}
+    .review-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .trust .wrap{grid-template-columns:repeat(2,1fr); gap:16px;}
+    .hero-art{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="wrap">
+      <span>Free shipping across Australia on orders over $99</span>
+      <span class="accent">Trusted by 12,000+ homes · 2-Year Warranty on all robots</span>
+    </div>
+  </div>
+
+  <div class="navrow wrap">
+    <a href="#" class="logo">
+      <svg class="logo-mark" viewBox="0 0 210 200" fill="none">
+        <path d="M150 130 L205 186 L177 186 L133 148 Z" fill="var(--orange)" stroke="var(--dark)" stroke-width="4" stroke-linejoin="round"/>
+        <rect x="118" y="14" width="68" height="172" rx="34" fill="var(--orange)" stroke="var(--dark)" stroke-width="4"/>
+        <circle cx="85" cy="100" r="78" fill="var(--yellow)" stroke="var(--dark)" stroke-width="6"/>
+        <circle cx="85" cy="100" r="58" fill="none" stroke="var(--dark)" stroke-width="3.5"/>
+        <rect x="62" y="68" width="46" height="10" rx="4" fill="var(--dark)"/>
+        <circle cx="85" cy="104" r="6" fill="var(--dark)"/>
+        <path d="M60 122 Q85 150 110 122" stroke="var(--dark)" stroke-width="7" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-text">
+        <div class="word"><span class="o">OJAS</span><span class="r">ROBO</span></div>
+        <div class="tag">Vacuum Cleaners &amp; Parts</div>
+      </div>
+    </a>
+
+    <nav class="primary">
+      <a href="#" class="active">Home</a>
+      <a href="#categories">Shop by Category</a>
+      <a href="#bestsellers">Bestsellers</a>
+      <a href="#retailers">Retailers</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#">Support</a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search parts...">
+      </div>
+
+      <a class="icon-btn" title="Wishlist">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+        <span class="badge">3</span>
+      </a>
+      <a class="icon-btn" title="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.5 3h2l2.7 12.4a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21.5 7H6"/></svg>
+        <span class="badge">2</span>
+      </a>
+      <a class="icon-btn" title="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 5-6 8-6s6.4 2 8 6"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO SLIDESHOW ================= -->
+<section class="hero" style="padding:0;">
+  <div class="slide active" data-slide="0">
+    <div class="bg" style="background:radial-gradient(circle at 75% 40%, #3a2e28 0%, #161513 70%);"></div>
+    <div class="wrap">
+      <span class="slide-eyebrow">New Arrival · 2026 Range</span>
+      <h1>Intelligent cleaning,<br><em>zero effort</em> living.</h1>
+      <p class="desc">Advanced robotic vacuum cleaners and smart automation built for Australian homes — engineered for power, tuned for quiet.</p>
+      <div class="slide-ctas">
+        <a href="#bestsellers" class="btn btn-primary">Shop Bestsellers</a>
+        <a href="#categories" class="btn btn-outline">Browse Parts</a>
+      </div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="90" fill="#1F1D1A" stroke="rgba(255,255,255,0.08)"/>
+      <circle cx="100" cy="100" r="60" fill="none" stroke="var(--orange)" stroke-width="10"/>
+      <circle cx="100" cy="80" r="8" fill="var(--yellow)"/>
+      <path d="M60 130 q40 30 80 0" stroke="var(--yellow)" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="slide" data-slide="1">
+    <div class="bg" style="background:radial-gradient(circle at 75% 40%, #4a1d0c 0%, #161513 70%);"></div>
+    <div class="wrap">
+      <span class="slide-eyebrow">Genuine Parts</span>
+      <h1>Keep your robot<br>running like <em>day one.</em></h1>
+      <p class="desc">Brushes, filters, dustbags and batteries — genuine OJAS ROBO parts fitted exactly to your model, delivered fast.</p>
+      <div class="slide-ctas">
+        <a href="#categories" class="btn btn-primary">Find My Parts</a>
+        <a href="#retailers" class="btn btn-outline">Find a Retailer</a>
+      </div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 200 200" fill="none">
+      <rect x="40" y="40" width="120" height="120" rx="20" fill="#1F1D1A" stroke="rgba(255,255,255,0.08)"/>
+      <circle cx="100" cy="100" r="34" fill="var(--orange)"/>
+      <circle cx="100" cy="100" r="14" fill="var(--yellow)"/>
+    </svg>
+  </div>
+
+  <div class="slide" data-slide="2">
+    <div class="bg" style="background:radial-gradient(circle at 75% 40%, #423a08 0%, #161513 70%);"></div>
+    <div class="wrap">
+      <span class="slide-eyebrow">2-Year Warranty</span>
+      <h1>999+ homes served,<br><em>zero compromises.</em></h1>
+      <p class="desc">Backed by AI-powered support, a 30-day trial, and free AU shipping — cleaning made effortless, guaranteed.</p>
+      <div class="slide-ctas">
+        <a href="#reviews" class="btn btn-primary">Read Reviews</a>
+        <a href="#" class="btn btn-outline">Our Promise</a>
+      </div>
+    </div>
+    <svg class="hero-art" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="88" fill="none" stroke="var(--yellow)" stroke-width="4" stroke-dasharray="6 8"/>
+      <circle cx="100" cy="100" r="55" fill="#1F1D1A"/>
+      <path d="M80 100l14 14 28-30" stroke="var(--yellow)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <button class="hero-arrow prev" onclick="moveSlide(-1)">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="hero-arrow next" onclick="moveSlide(1)">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <div class="slide-dots">
+    <button class="active" onclick="goSlide(0)"></button>
+    <button onclick="goSlide(1)"></button>
+    <button onclick="goSlide(2)"></button>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="wrap">
+    <div class="item"><div class="num">12K+</div><div class="lbl">Happy Customers</div></div>
+    <div class="item"><div class="num">4.9</div><div class="lbl">Average Rating</div></div>
+    <div class="item"><div class="num">99%</div><div class="lbl">Satisfaction Rate</div></div>
+    <div class="item"><div class="num">999+</div><div class="lbl">Products Delivered</div></div>
+  </div>
+</div>
+
+<!-- ================= SHOP BY CATEGORY ================= -->
+<section id="categories">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Genuine Parts</span>
+        <h2>Shop by category</h2>
+        <p class="desc">Find the exact replacement part for your OJAS ROBO model — fitted right, every time.</p>
+      </div>
+      <a href="#" class="view-all">View all parts
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="cat-grid">
+      <a class="cat-card" href="#">
+        <div class="cat-icon" style="background:#FCE7DE;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>
+          </svg>
+        </div>
+        <h4>Side Brushes</h4>
+        <p>Edge &amp; corner sweeping arms</p>
+        <span class="count">14 items</span>
+      </a>
+
+      <a class="cat-card" href="#">
+        <div class="cat-icon" style="background:#FFF3C4;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#B8960B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 4h18l-7 9v6l-4 2v-8L3 4Z"/>
+          </svg>
+        </div>
+        <h4>Filters</h4>
+        <p>HEPA &amp; foam filtration sets</p>
+        <span class="count">10 items</span>
+      </a>
+
+      <a class="cat-card" href="#">
+        <div class="cat-icon" style="background:#E4E1D8;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="9" width="18" height="6" rx="3"/><path d="M7 9v6M11 9v6M15 9v6"/>
+          </svg>
+        </div>
+        <h4>Main Brush</h4>
+        <p>Roller brushes &amp; bristle bars</p>
+        <span class="count">8 items</span>
+      </a>
+
+      <a class="cat-card" href="#">
+        <div class="cat-icon" style="background:#FCE7DE;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3V8Z"/><path d="M9 5V3.5A1.5 1.5 0 0 1 10.5 2h3A1.5 1.5 0 0 1 15 3.5V5"/>
+          </svg>
+        </div>
+        <h4>Dust Bags</h4>
+        <p>Disposable &amp; washable bags</p>
+        <span class="count">12 items</span>
+      </a>
+
+      <a class="cat-card" href="#">
+        <div class="cat-icon" style="background:#FFF3C4;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#B8960B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="7" width="16" height="10" rx="2"/><path d="M19 10v4M7 10v4M11 10v4"/>
+          </svg>
+        </div>
+        <h4>Batteries</h4>
+        <p>Long-life replacement packs</p>
+        <span class="count">6 items</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AUTHORISED RETAILERS ================= -->
+<section id="retailers" class="retailers">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Where to Buy</span>
+        <h2>Authorised retail partners</h2>
+        <p class="desc">OJAS ROBO products are sold exclusively through these trusted retailers across Australia.</p>
+      </div>
+    </div>
+
+    <div class="retailer-grid">
+      <div class="retailer-card">HARVEY&nbsp;N.</div>
+      <div class="retailer-card">GOOD GUYS</div>
+      <div class="retailer-card">JB TECH</div>
+      <div class="retailer-card">APPLIANCE&nbsp;CO</div>
+      <div class="retailer-card">BIG&nbsp;W HOME</div>
+      <div class="retailer-card">MYER&nbsp;HOME</div>
+    </div>
+
+    <div class="retailer-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 12.5l1.8 1.8 3.2-4.2"/></svg>
+      Buying from an unauthorised seller? You may miss out on warranty cover — always check this list first.
+    </div>
+  </div>
+</section>
+
+<!-- ================= BESTSELLERS ================= -->
+<section id="bestsellers" class="bestsellers">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow" style="color:var(--yellow);">Top 10 This Month</span>
+        <h2>Bestsellers</h2>
+        <p class="desc">The robots and parts our customers reorder the most.</p>
+      </div>
+      <a href="#" class="view-all">Shop all bestsellers
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="bs-scroller" id="bsScroller"></div>
+  </div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Customer Love</span>
+        <h2>What they think about us</h2>
+      </div>
+    </div>
+
+    <div class="review-top">
+      <div class="rating-big">4.9</div>
+      <div>
+        <div class="stars-row">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg>
+        </div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:6px;">Based on 3,214 verified purchases</p>
+      </div>
+    </div>
+
+    <div class="review-grid" id="reviewGrid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#" class="logo" style="margin-bottom:14px;">
+          <svg class="logo-mark" viewBox="0 0 210 200" fill="none" width="34" height="34">
+            <path d="M150 130 L205 186 L177 186 L133 148 Z" fill="var(--orange)" stroke="var(--dark)" stroke-width="4" stroke-linejoin="round"/>
+            <rect x="118" y="14" width="68" height="172" rx="34" fill="var(--orange)" stroke="var(--dark)" stroke-width="4"/>
+            <circle cx="85" cy="100" r="78" fill="var(--yellow)" stroke="var(--dark)" stroke-width="6"/>
+            <circle cx="85" cy="100" r="58" fill="none" stroke="var(--dark)" stroke-width="3.5"/>
+            <rect x="62" y="68" width="46" height="10" rx="4" fill="var(--dark)"/>
+            <circle cx="85" cy="104" r="6" fill="var(--dark)"/>
+            <path d="M60 122 Q85 150 110 122" stroke="var(--dark)" stroke-width="7" fill="none" stroke-linecap="round"/>
+          </svg>
+          <span style="font-family:'Anton'; font-size:17px; color:#fff;">OJAS ROBO</span>
+        </a>
+        <p style="font-size:13px; line-height:1.6; max-width:260px;">Advanced robotic vacuum cleaners and smart automation — everyday life made easier, smarter, more efficient.</p>
+      </div>
+      <div>
+        <h5>Shop</h5>
+        <ul><li>Vacuum Cleaners</li><li>Side Brushes</li><li>Filters</li><li>Main Brush</li><li>Dust Bags</li><li>Batteries</li></ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul><li>About Us</li><li>Retail Partners</li><li>Warranty</li><li>Careers</li></ul>
+      </div>
+      <div>
+        <h5>Support</h5>
+        <ul><li>Contact Us</li><li>Track Order</li><li>Returns</li><li>FAQs</li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 OJAS ROBO. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Hero slideshow ----
+  let slideIdx = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.slide-dots button');
+  function goSlide(i){
+    slides[slideIdx].classList.remove('active');
+    dots[slideIdx].classList.remove('active');
+    slideIdx = (i + slides.length) % slides.length;
+    slides[slideIdx].classList.add('active');
+    dots[slideIdx].classList.add('active');
+  }
+  function moveSlide(delta){ goSlide(slideIdx + delta); }
+  setInterval(()=>moveSlide(1), 5500);
+
+  // ---- Bestsellers data (top 10) ----
+  const bg = ['#3a2e28','#4a1d0c','#423a08','#2a3520','#1e2d3a','#3a2038','#2f3a2a','#3a2a3a','#20353a','#3a3020'];
+  const products = [
+    {name:'OJAS Xg Pro Robotic Vacuum', tag:'Vacuum Cleaner', price:'$1,699.99', rating:'4.9'},
+    {name:'Self-Empty Base Station', tag:'Accessory', price:'$349.00', rating:'4.8'},
+    {name:'HEPA Filter Twin Pack', tag:'Filters', price:'$29.99', rating:'4.9'},
+    {name:'Main Brush Roller Set', tag:'Main Brush', price:'$24.99', rating:'4.7'},
+    {name:'4500mAh Replacement Battery', tag:'Batteries', price:'$59.99', rating:'4.8'},
+    {name:'Side Brush 3-Pack', tag:'Side Brushes', price:'$14.99', rating:'4.9'},
+    {name:'Washable Dust Bag Set', tag:'Dust Bags', price:'$19.99', rating:'4.6'},
+    {name:'OJAS Slim Stick Vacuum', tag:'Vacuum Cleaner', price:'$899.00', rating:'4.7'},
+    {name:'Mop Attachment Kit', tag:'Accessory', price:'$44.99', rating:'4.5'},
+    {name:'All-Terrain Wheel Set', tag:'Spare Parts', price:'$34.99', rating:'4.6'}
+  ];
+  const scroller = document.getElementById('bsScroller');
+  products.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'bs-card';
+    card.innerHTML = `
+      <span class="rank-tag">${i+1}</span>
+      <div class="bs-thumb" style="background:radial-gradient(circle at 65% 35%, ${bg[i]} 0%, #14120f 75%);">
+        <button class="bs-wish"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></button>
+        <svg width="60" height="60" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="30" fill="none" stroke="#E93E08" stroke-width="8"/><circle cx="50" cy="38" r="6" fill="#EADA15"/></svg>
+      </div>
+      <div class="bs-meta"><svg viewBox="0 0 24 24"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg> ${p.rating} · ${p.tag}</div>
+      <h4>${p.name}</h4>
+      <div class="bs-price-row">
+        <span class="bs-price">${p.price}</span>
+        <button class="bs-add"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+    `;
+    scroller.appendChild(card);
+  });
+
+  // ---- Reviews data ----
+  const avColors = ['#E93E08','#EADA15','#3A7CA5'];
+  const reviews = [
+    {name:'Julia K.', prod:'OJAS Xg Pro', quote:'Excellent product and outstanding service. My robotic vacuum works perfectly and navigates around every corner of my home. Highly recommend OJAS ROBO.'},
+    {name:'Marcus T.', prod:'Self-Empty Base', quote:'Ordering genuine replacement filters was so easy, and they arrived within two days. Support team was quick to help me pick the right part.'},
+    {name:'Priya S.', prod:'OJAS Slim Stick', quote:'Two years in and still going strong thanks to easy battery replacements. The warranty support has been fantastic every time I needed it.'}
+  ];
+  const reviewGrid = document.getElementById('reviewGrid');
+  reviews.forEach((r,i)=>{
+    const initials = r.name.split(' ').map(w=>w[0]).join('');
+    const card = document.createElement('div');
+    card.className = 'review-card';
+    card.innerHTML = `
+      <div class="stars-row">
+        ${'<svg viewBox="0 0 24 24" fill="#EADA15"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1L12 2z"/></svg>'.repeat(5)}
+      </div>
+      <p class="quote">"${r.quote}"</p>
+      <div class="reviewer">
+        <div class="avatar" style="background:${avColors[i % avColors.length]};">${initials}</div>
+        <div>
+          <div class="name">${r.name}</div>
+          <div class="prod">Verified buyer · ${r.prod}</div>
+        </div>
+      </div>
+    `;
+    reviewGrid.appendChild(card);
+  });
+</script>
+
+</body>
+</html>
